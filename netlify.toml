@@ -3,7 +3,7 @@
 
 [build]
   publish = "dist"
-  command = "pnpm build && pnpm generate:node_serverless"
+  command = "pnpm build && pnpm gener2ate:node_serverless"
 
 [dev]
   framework = "vite"
