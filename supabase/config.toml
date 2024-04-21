@@ -132,6 +132,9 @@ verify_jwt = false
 [functions.stats]
 verify_jwt = false
 
+[functions.proxied_download]
+verify_jwt = false
+
 [functions.set_custom_id]
 verify_jwt = false
 

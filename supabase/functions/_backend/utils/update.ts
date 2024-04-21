@@ -17,6 +17,7 @@ import { appIdToUrl } from './conversion.ts'
 import * as schema_postgres from './postgress_schema.ts'
 import type { DeviceWithoutCreatedAt } from './clickhouse.ts'
 import { sendStatsAndDevice } from './clickhouse.ts'
+import { generateSecureProxiedDownloadUrl } from './proxied_download.ts'
 
 let globalPgClient = null as ReturnType<typeof postgres> | null
 
@@ -625,7 +626,7 @@ export async function update(c: Context, body: AppInfos) {
       const preManifest = version.manifest
       const finalManifest = await Promise.all(preManifest.map(async (entry) => {
         try {
-          const downloadUrl = await getDownloadUrl(c, entry.s3_path)
+          const downloadUrl = await generateSecureProxiedDownloadUrl(c, entry.s3_path, app_id, version.id)
           return {
             file_name: entry.file_name,
             file_hash: entry.file_hash,
