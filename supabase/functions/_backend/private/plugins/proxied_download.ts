@@ -2,6 +2,7 @@ import { Hono } from 'hono/tiny'
 import type { Context } from 'hono'
 import { z } from 'zod'
 import { verifyProxiedDownloadSignatire } from '../../utils/proxied_download.ts'
+import { s3 } from '../../utils/s3.ts'
 
 const jsonRequestSchema = z.object({
   digest: z.string(),
@@ -32,9 +33,12 @@ app.get('/', async (c: Context) => {
     const finalDetail = parsedDetails.data
 
     // Let's verify the signature
-    const valid = await verifyProxiedDownloadSignatire(c, finalDetail.digest, finalDetail)
+    // const valid = await verifyProxiedDownloadSignatire(c, finalDetail.digest, finalDetail)
 
-    return c.text(`ok ${valid}`)
+    const s3Url = await s3.getSignedUrl(c, finalDetail.path, 100)
+
+    // return c.json({ ok: 'not ok' }, 500)
+    return c.redirect(s3Url)
   }
   catch (e) {
     console.log('error', JSON.stringify(e))
